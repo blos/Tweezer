@@ -5,4 +5,5 @@ scikit-learn
 tqdm
 tensorflow
 tqdm
-scipy
+scipy<1.13
+tqdm

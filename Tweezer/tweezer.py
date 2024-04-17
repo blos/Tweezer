@@ -3,6 +3,7 @@ import re
 import tempfile
 from pathlib import Path
 from pprint import pprint
+from tqdm import tqdm
 
 from Tweezer.GhidraBridge.ghidra_bridge import GhidraBridge
 from Tweezer.Model.model import Model
@@ -14,25 +15,34 @@ class Tweezer():
         self.model = None
         self.model_path = model_path
 
-    def train(self, list_of_binary_folders):
-        self.extend_model_training(list_of_binary_folders)
+    def train(self, list_of_binary_folders,include_unnamed_funcs = False):
+        self.extend_model_training(list_of_binary_folders,include_unnamed_funcs)
 
-    def extend_model_training(self, list_of_binary_folders):
+    def extend_model_training(self, list_of_binary_folders, include_unnamed_funcs = False):
         trainer = Trainer()
         self.model = Model(self.model_path)
         with tempfile.TemporaryDirectory() as decom_output:
             trainer._generate_decompiled_functions_from_binaries(list_of_binary_folders, decom_output)
 
-            for file_path in Path(decom_output).iterdir():
+            for file_path in tqdm(list(Path(decom_output).iterdir()), desc="Iterating through decompiled files"):
                 binary_name, function_name, *epoc = Path(file_path).name.split("__")
 
-                if "FUN" not in function_name:
+                if include_unnamed_funcs:
                     print("Getting vectors for {}".format(file_path))
                     dataset = self.get_data_dict_from_file(file_path)
                     if "code" in dataset:
                         self.model.learn(dataset)
                     else:
                         print("Couldn't train off {}".format(file_path))
+                else:
+                    if "FUN" not in function_name:
+                        print("Getting vectors for {}".format(file_path))
+                        dataset = self.get_data_dict_from_file(file_path)
+                        if "code" in dataset:
+                            self.model.learn(dataset)
+                        else:
+                            print("Couldn't train off {}".format(file_path))
+
 
     def _sort_by_distance(self, dataset):
         """
@@ -84,8 +94,13 @@ def parse_args():
 
     # Model path argument (always required)
     parser.add_argument('--model-path', required=True, help='Path to the Tweezer model file')
+
     # Binary locations argument (accepts multiple values)
     parser.add_argument('--train', nargs='+', help='List of binary locations to train/extend training off')
+
+    # Include function names argument, usable only when train is specified
+    train_group = parser.add_argument_group('train options')
+    train_group.add_argument('--include-non-labelled-functions',default=False, action='store_true', help='When training include non-labelled function names (e.g. FUNC337474)')
 
     # Create a mutually exclusive group for --function and --binary
     group = parser.add_mutually_exclusive_group()
@@ -156,7 +171,7 @@ def entry():
     elif args.train:
         list_of_binary_folders = args.train
         tweezer = Tweezer(args.model_path)
-        tweezer.train(list_of_binary_folders)
+        tweezer.train(list_of_binary_folders, args.include_non_labelled_functions)
 
 
 if __name__ == '__main__':
