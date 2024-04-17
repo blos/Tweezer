@@ -6,4 +6,3 @@ tqdm
 tensorflow
 tqdm
 scipy<1.13
-tqdm
