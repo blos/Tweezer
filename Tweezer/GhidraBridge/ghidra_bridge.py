@@ -5,21 +5,23 @@ import subprocess
 import tempfile
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+from subprocess import CompletedProcess
 
 from tqdm import tqdm
 
 
-class GhidraBridge():
-    def __init__(self):
+class GhidraBridge:
+    def __init__(self) -> None:
         pass
 
-    def _execute_blocking_command(self, command_as_list):
+    @staticmethod
+    def _execute_blocking_command(command_as_list: list[str]) -> CompletedProcess[bytes]:
         if command_as_list != None:
             print("Executing command: {}".format(command_as_list))
             result = subprocess.run(command_as_list, capture_output=False, stdout=subprocess.PIPE)
             return result
 
-    def generate_ghidra_decom_script(self, path_to_save_decoms_to, file_to_save_script_to):
+    def generate_ghidra_decom_script(self, path_to_save_decoms_to: str, file_to_save_script_to: Path) -> None:
 
         script = """# SaveFunctions.py
         
@@ -90,14 +92,15 @@ save_all_functions_to_files()
         with open(file_to_save_script_to, "w") as file:
             file.write(script)
 
-    def _check_if_ghidra_project_exists(self, project_folder, project_name):
+    @staticmethod
+    def _check_if_ghidra_project_exists(project_folder: str | Path, project_name: str) -> bool:
 
         project_folder_path = Path(project_folder, project_name + ".gpr")
 
         return project_folder_path.exists()
 
-    def _construct_ghidra_headless_command(self, binary_path, script_path, binary_hash,
-                                           ghidra_project_dir=Path.cwd().name):
+    def _construct_ghidra_headless_command(self, binary_path: str, script_path: Path, binary_hash: str,
+                                           ghidra_project_dir: str = Path.cwd().name) -> None:
 
         binary_name = "analyzeHeadless.bat"
 
@@ -139,19 +142,20 @@ save_all_functions_to_files()
             # Run Ghidra headless command
             self._execute_blocking_command(commandStr)
 
-    def _hash_binary(self, binary_path):
+    @staticmethod
+    def _hash_binary(binary_path: str) -> str:
         with open(binary_path, 'rb') as f:
             binary_hash = hashlib.sha256(f.read()).hexdigest()
         return binary_hash
 
-    def decompile_binaries_functions(self, path_to_binary, decom_folder):
+    def decompile_binaries_functions(self, path_to_binary: str | Path, decom_folder: str) -> None:
         binary_hash = self._hash_binary(path_to_binary)
         with tempfile.TemporaryDirectory() as tmpdirname:
             script_path = Path(tmpdirname, "decom_script.py").resolve()
             self.generate_ghidra_decom_script(decom_folder, script_path)
             self._construct_ghidra_headless_command(path_to_binary, script_path, binary_hash)
 
-    def decompile_all_binaries_in_folder(self, path_to_folder, decom_folder):
+    def decompile_all_binaries_in_folder(self, path_to_folder: str | Path, decom_folder: str) -> None:
         # Create a list to store all the file paths
         files_to_process = [file_path for file_path in Path(path_to_folder).iterdir() if file_path.is_file()]
 

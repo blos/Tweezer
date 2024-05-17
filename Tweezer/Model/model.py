@@ -10,26 +10,29 @@ class Model:
     vectors = []
     vectors_path = ""
 
-    def __init__(self, vectors_path="TweezerMDL", vector_size=100):
+    def __init__(self, vectors_path: str = "TweezerMDL", vector_size: int = 100):
         self.vectors_path = vectors_path
 
         if Path(vectors_path).is_file():
             self.vectors = self.read_vector_file(vectors_path)
 
-    def learn(self, dict_to_add_to_dataset):
+    def learn(self, dict_to_add_to_dataset: dict) -> None:
         dict_with_vector = self.process_code_and_append_vector(dict_to_add_to_dataset)
         self.vectors.append(dict_with_vector)
         self.save_vector_file(self.vectors, self.vectors_path)
 
-    def save_vector_file(self, vectors, vectors_path):
+    @staticmethod
+    def save_vector_file(vectors: list[dict], vectors_path: str) -> None:
         with open(vectors_path, 'wb') as file:
             pickle.dump(vectors, file)
 
-    def read_vector_file(self, vector_path):
+    @staticmethod
+    def read_vector_file(vector_path: str) -> list[dict]:
         with open(vector_path, 'rb') as file:
             return pickle.load(file)
 
-    def process_code_and_append_vector(self, data):
+    @staticmethod
+    def process_code_and_append_vector(data: dict) -> dict:
         """
         Process the given code data using Word2Vec to generate a fixed-size vector and append it to the data dict.
 
@@ -70,7 +73,8 @@ class Model:
 
         return data
 
-    def find_closest_code(self, dataset, target):
+    @staticmethod
+    def find_closest_code(dataset: list[dict], target: dict) -> list[dict]:
         """
         Find the code in the dataset closest to the target based on their vectors and add a 'distance' field to each.
 

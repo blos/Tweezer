@@ -3,12 +3,13 @@ from pathlib import Path
 from Tweezer.GhidraBridge.ghidra_bridge import GhidraBridge
 
 
-class Trainer():
+class Trainer:
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def _generate_decompiled_functions_from_binaries(self, paths_to_binary_folders, decom_output):
+    @staticmethod
+    def _generate_decompiled_functions_from_binaries(paths_to_binary_folders: list[str], decom_output: str):
         bridge = GhidraBridge()
         for path in paths_to_binary_folders:
             print("Decompiling: {}".format(path))
