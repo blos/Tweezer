@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "tweezer"
+version = "0.1.0"
+description = "A binary analysis tool for identifying unknown function names, using a word2vec-model"
+authors = ["user1342 <28961606+user1342@users.noreply.github.com>"]
+maintainers = [
+    "user1342 <28961606+user1342@users.noreply.github.com>",
+    "blos <15933093+blos@users.noreply.github.com>"
+]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/user1342/Tweezer"
+keywords = ["machine-learning", "word2vec", "reverse-engineering", "embeddings", "embeddings-models", "ghidra"]
+classifiers = [
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+exclude = [
+    "example_tweezer.mdl",
+    "tweezer.gif",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
