@@ -22,14 +22,13 @@ Put simply, Tweezer is a tool for identifying function names in stripped binarie
 
 # ⚙️ Setup
 
-## Dependancies
+## Dependencies
 
 Tweezer requires [Ghidra](https://ghidra-sre.org/) to be installed, and for ```analyzeHeadless``` to be on your path. If
 it is not on your path Tweezer will request on run where the binary is located. To install all other dependencies use
-the ```requirements.txt``` file, with:
-
-```
-pip install -r requirements.txt
+```shell
+pip install poetry        # installs poetry in your current python environment
+poetry install --no-root  # installs dependencies of Tweezer
 ```
 
 ## Running
