@@ -26,19 +26,19 @@ Put simply, Tweezer is a tool for identifying function names in stripped binarie
 
 Tweezer requires [Ghidra](https://ghidra-sre.org/) to be installed, and for ```analyzeHeadless``` to be on your path. If
 it is not on your path Tweezer will request on run where the binary is located. To install all other dependencies use
-```shell
+```bash
 pip install poetry        # installs poetry in your current python environment
 poetry install --no-root  # installs dependencies of Tweezer
 ```
 
 ## Running
 
-Depending on if you already have a trained model/ map of vectors you may decide to run Tweezer in one of two ways,
-either 1) to train a new model/ extend an existing model or 2) to run Tweezer against a decompiled function or binary. 
+Depending on if you already have a trained model/map of vectors you may decide to run Tweezer in one of two ways,
+either 1) to train a new model/extend an existing model or 2) to run Tweezer against a decompiled function or binary. 
 
-An example model for testing can be found in the Github repo at [example_tweezer.mdl](https://github.com/user1342/Tweezer/blob/main/example_tweezer.mdl). This model should not be used in production as it has only been trained off a single binary from [Cisco Talos Binary Function Similarity](https://github.com/Cisco-Talos/binary_function_similarity).
+An example model for testing can be found in the GitHub repo at [example_tweezer.mdl](https://github.com/user1342/Tweezer/blob/main/example_tweezer.mdl). This model should not be used in production as it has only been trained off a single binary from [Cisco Talos Binary Function Similarity](https://github.com/Cisco-Talos/binary_function_similarity).
 
-### Training/ Extending the Model
+### Training/Extending the Model
 Use this entrypoint when training a new or extending a model. A model file is a pickled list of vectors the word2vec model has outputted. Because of this, existing 'models' can be extended endlessly without the need to start from scratch.
 ```bash
 python3 tweezer.py --model-path <model-path> --train <binary-folder-1> <binary-folder-2>...
