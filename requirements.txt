@@ -1,8 +1,0 @@
-numpy
-gensim
-nltk
-scikit-learn
-tqdm
-tensorflow
-tqdm
-scipy<1.13
