@@ -2,7 +2,7 @@
 name = "tweezer"
 version = "0.1.0"
 description = "A binary analysis tool for identifying unknown function names, using a word2vec-model"
-authors = ["user1342 <28961606+user1342@users.noreply.github.com>"]
+authors = ["user1342 <opensource@JamesStevenson.me>"]
 maintainers = [
     "user1342",
     "blos"
