@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "A binary analysis tool for identifying unknown function names, using a word2vec-model"
 authors = ["user1342 <28961606+user1342@users.noreply.github.com>"]
 maintainers = [
-    "user1342 <28961606+user1342@users.noreply.github.com>",
-    "blos <15933093+blos@users.noreply.github.com>"
+    "user1342",
+    "blos"
 ]
 license = "GPL-3.0-only"
 readme = "README.md"
