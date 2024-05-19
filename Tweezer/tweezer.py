@@ -4,21 +4,22 @@ import tempfile
 from pathlib import Path
 from pprint import pprint
 from tqdm import tqdm
+from argparse import Namespace
 
 from Tweezer.GhidraBridge.ghidra_bridge import GhidraBridge
 from Tweezer.Model.model import Model
 from Tweezer.Training.trainer import Trainer
 
 
-class Tweezer():
-    def __init__(self, model_path="TweezerMDL"):
+class Tweezer:
+    def __init__(self, model_path: str = "TweezerMDL") -> None:
         self.model = None
         self.model_path = model_path
 
-    def train(self, list_of_binary_folders,include_unnamed_funcs = False):
-        self.extend_model_training(list_of_binary_folders,include_unnamed_funcs)
+    def train(self, list_of_binary_folders: list[str], include_unnamed_funcs: bool = False) -> None:
+        self.extend_model_training(list_of_binary_folders, include_unnamed_funcs)
 
-    def extend_model_training(self, list_of_binary_folders, include_unnamed_funcs = False):
+    def extend_model_training(self, list_of_binary_folders: list[str], include_unnamed_funcs: bool = False) -> None:
         trainer = Trainer()
         self.model = Model(self.model_path)
         with tempfile.TemporaryDirectory() as decom_output:
@@ -43,8 +44,8 @@ class Tweezer():
                         else:
                             print("Couldn't train off {}".format(file_path))
 
-
-    def _sort_by_distance(self, dataset):
+    @staticmethod
+    def _sort_by_distance(dataset: list[dict]) -> list[dict]:
         """
         Sort the dataset by the 'distance' field from closest to farthest.
 
@@ -53,7 +54,8 @@ class Tweezer():
         """
         return sorted(dataset, key=lambda x: x['distance'])
 
-    def _get_code_from_decom_file(self, path_to_file):
+    @staticmethod
+    def _get_code_from_decom_file(path_to_file: Path) -> str:
         with open(path_to_file, "r") as file:
             code = file.read()
             pattern = re.compile(r'\{([^}]*)\}', re.DOTALL)
@@ -64,13 +66,13 @@ class Tweezer():
             else:
                 return code
 
-    def get_data_dict_from_file(self, file_path):
+    def get_data_dict_from_file(self, file_path: Path) -> dict:
         function_dict = {}
         function_dict["binary_name"], function_dict["function_name"], *epoc = Path(file_path).name.split("__")
         function_dict["code"] = self._get_code_from_decom_file(file_path)
         return function_dict
 
-    def find_closest_functions(self, function_file, number_of_closest=10):
+    def find_closest_functions(self, function_file: Path, number_of_closest: int = 10) -> str | list[dict]:
         self.model = Model(self.model_path)
 
         function_dict = self.get_data_dict_from_file(function_file)
@@ -88,7 +90,7 @@ class Tweezer():
         return self._sort_by_distance(dataset)[:number_of_closest]
 
 
-def parse_args():
+def parse_args() -> Namespace:
     parser = argparse.ArgumentParser(
         description='Command-line interface Tweezer, binary analysis unknown function name finder.')
 
@@ -112,7 +114,7 @@ def parse_args():
     return args
 
 
-def entry():
+def entry() -> None:
     args = parse_args()
 
     # compare a decompiled function with vectors
@@ -167,7 +169,7 @@ def entry():
         print("=" * 20)
         print("\n\n")
 
-    # Train / re train the model
+    # Train / re-train the model
     elif args.train:
         list_of_binary_folders = args.train
         tweezer = Tweezer(args.model_path)
