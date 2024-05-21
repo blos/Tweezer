@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from Tweezer.GhidraBridge.ghidra_bridge import GhidraBridge
+from tweezer.ghidra_bridge import GhidraBridge
 
 
 class Trainer:

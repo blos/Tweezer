@@ -6,9 +6,9 @@ from pprint import pprint
 from tqdm import tqdm
 from argparse import Namespace
 
-from Tweezer.GhidraBridge.ghidra_bridge import GhidraBridge
-from Tweezer.Model.model import Model
-from Tweezer.Training.trainer import Trainer
+from tweezer.ghidra_bridge import GhidraBridge
+from tweezer.model import Model
+from tweezer.trainer import Trainer
 
 
 class Tweezer:
@@ -92,10 +92,10 @@ class Tweezer:
 
 def parse_args() -> Namespace:
     parser = argparse.ArgumentParser(
-        description='Command-line interface Tweezer, binary analysis unknown function name finder.')
+        description='Command-line interface tweezer, binary analysis unknown function name finder.')
 
     # Model path argument (always required)
-    parser.add_argument('--model-path', required=True, help='Path to the Tweezer model file')
+    parser.add_argument('--model-path', required=True, help='Path to the tweezer model file')
 
     # Binary locations argument (accepts multiple values)
     parser.add_argument('--train', nargs='+', help='List of binary locations to train/extend training off')

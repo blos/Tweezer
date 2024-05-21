@@ -28,7 +28,7 @@ Tweezer requires [Ghidra](https://ghidra-sre.org/) to be installed, and for ```a
 it is not on your path Tweezer will request on run where the binary is located. To install all other dependencies use
 ```bash
 pip install poetry        # installs poetry in your current python environment
-poetry install --no-root  # installs dependencies of Tweezer
+poetry install --no-root  # installs dependencies of tweezer
 ```
 
 ## Running
